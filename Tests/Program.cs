@@ -20,10 +20,10 @@ namespace Tests
 
             MethodInput[] inputs = new MethodInput[]
             {
-                    new MethodInput(null, 0m, 0m),
-                    new MethodInput(null, 0m, 1m),
-                    new MethodInput(null, 1m, 0m),
-                    new MethodInput(null, 1m, 1m)
+                new MethodInput(null, 0m, 0m),
+                new MethodInput(null, 0m, 1m),
+                new MethodInput(null, 1m, 0m),
+                new MethodInput(null, 1m, 1m)
             };
 
             if (Mutator.Mutator.MutateSingleFile(@"C:\Users\Nick\source\repos\Seminar\Logic\MathClass.cs",
