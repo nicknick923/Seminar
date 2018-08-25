@@ -12,7 +12,7 @@ namespace Mutator
 {
     public static class Mutator
     {
-        public static IEnumerable<string> Mutate(string filePath, Mutatations original, Mutatations mutated)
+        public static IEnumerable<MutationResult> Mutate(string filePath, Mutatations original, Mutatations mutated)
         {
             SyntaxNode root = CSharpSyntaxTree.ParseText(File.ReadAllText(filePath)).GetRoot();
             return Rewriter.GetAllCombinations(root, original, mutated);
@@ -26,21 +26,26 @@ namespace Mutator
             Divide
         }
 
-        public static IEnumerable<Assembly> MutateSingleFile(string filePath, Mutatations original, Mutatations mutated)
-        {
-            CSharpCodeProvider csc = new CSharpCodeProvider();
-            CompilerParameters parameters = new CompilerParameters();
-            foreach (var item in Mutate(filePath, original, mutated))
-            {
-                yield return csc.CompileAssemblyFromSource(parameters, item).CompiledAssembly;
-            }
-        }
-
         private static class SyntaxNodeTools
         {
             public static SyntaxNode CloneNode(SyntaxNode node)
             {
                 return CSharpSyntaxTree.ParseText(node.ToString()).GetRoot();
+            }
+        }
+
+        public class MutationResult
+        {
+            public string Summary { get; }
+            public string Result { get; }
+            public Assembly Assembly { get; }
+            public MutationResult(string summary, string result)
+            {
+                Summary = summary;
+                Result = result;
+                CSharpCodeProvider csc = new CSharpCodeProvider();
+                CompilerParameters parameters = new CompilerParameters();
+                Assembly = csc.CompileAssemblyFromSource(parameters, result).CompiledAssembly;
             }
         }
 
@@ -51,16 +56,23 @@ namespace Mutator
             private bool changeMade = false;
             private readonly Mutatations Original;
             private readonly Mutatations MutateTo;
-            public static IEnumerable<string> GetAllCombinations(SyntaxNode node, Mutatations original, Mutatations mutateTo)
+            private string ChangeNote;
+            public static IEnumerable<MutationResult> GetAllCombinations(SyntaxNode node, Mutatations original, Mutatations mutateTo)
             {
+                List<MutationResult> results = new List<MutationResult>();
                 int i = 0;
                 Rewriter rewriter = new Rewriter(i, original, mutateTo);
-                yield return rewriter.Visit(SyntaxNodeTools.CloneNode(node)).ToString();
+                SyntaxNode visitedNode = rewriter.Visit(SyntaxNodeTools.CloneNode(node));
+
+                results.Add(new MutationResult(rewriter.ChangeNote, visitedNode.ToString()));
                 while (rewriter.changeMade)
                 {
                     rewriter = new Rewriter(++i, original, mutateTo);
-                    yield return rewriter.Visit(SyntaxNodeTools.CloneNode(node)).ToString();
+                    visitedNode = rewriter.Visit(SyntaxNodeTools.CloneNode(node));
+                    results.Add(new MutationResult(rewriter.ChangeNote, visitedNode.ToString()));
                 }
+                results.RemoveAt(results.Count - 1);
+                return results;
             }
             private Rewriter(int inRequestCount, Mutatations original, Mutatations mutateTo)
             {
@@ -100,8 +112,10 @@ namespace Mutator
                     || Original == Mutatations.Divide && node.IsKind(SyntaxKind.DivideExpression))
                     && count++ == requestCount)
                 {
+                    ExpressionSyntax expressionSyntax = ConvertTo(node);
+                    ChangeNote = $"[{node.ToString()}] Changed To [{expressionSyntax.ToString()}]";
                     changeMade = true;
-                    return base.Visit(ConvertTo(node));
+                    return base.Visit(expressionSyntax);
                 }
                 return base.VisitBinaryExpression(node);
             }
