@@ -53,6 +53,10 @@
       <Project>{7ac9b39b-7677-49f2-ad8b-cf20bf347c93}</Project>
       <Name>Logic</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Mutator\Mutator.csproj">
+      <Project>{62be75f7-fda7-48e6-9c07-6a22aaf422ed}</Project>
+      <Name>Mutator</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic", "Logic\Logic.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{07335C43-8552-4A7F-AE41-9D9F6DF86D66}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutator", "Mutator\Mutator.csproj", "{62BE75F7-FDA7-48E6-9C07-6A22AAF422ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{07335C43-8552-4A7F-AE41-9D9F6DF86D66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07335C43-8552-4A7F-AE41-9D9F6DF86D66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07335C43-8552-4A7F-AE41-9D9F6DF86D66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62BE75F7-FDA7-48E6-9C07-6A22AAF422ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62BE75F7-FDA7-48E6-9C07-6A22AAF422ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62BE75F7-FDA7-48E6-9C07-6A22AAF422ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62BE75F7-FDA7-48E6-9C07-6A22AAF422ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
